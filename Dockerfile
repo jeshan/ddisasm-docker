@@ -70,11 +70,10 @@ FROM ubuntu:21.04
 
 WORKDIR /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /app/gtirb/build/java/gtirb_api-*.jar /libs/
-COPY --from=builder /usr/local/bin/ddisasm /usr/local/bin/
+COPY --from=builder /usr/local/bin/gtirb-* /usr/local/bin/ddisasm /usr/local/bin/
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libgomp.* /usr/lib/x86_64-linux-gnu/libprotobuf.* \
   /usr/local/lib/libehp.so* \
-  /usr/local/lib/libgtirb_pprinter.so* \
-  /usr/local/lib/libgtirb.so* \
+  /usr/local/lib/libgtirb*.so* \
   /usr/lib/libcapstone.* \
   /usr/lib/x86_64-linux-gnu/libboost_filesystem.* \
   /usr/lib/x86_64-linux-gnu/libboost_program_options.* \
