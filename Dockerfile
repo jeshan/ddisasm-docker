@@ -68,6 +68,10 @@ RUN gtirb-pprinter --version
 
 FROM ubuntu:21.04
 
+RUN apt-get update && \
+  apt-get install --no-install-recommends -y gcc && \
+  rm -rf /var/cache/apt/*
+
 WORKDIR /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /app/gtirb/build/java/gtirb_api-*.jar /libs/
 COPY --from=builder /usr/local/bin/gtirb-* /usr/local/bin/ddisasm /usr/local/bin/
