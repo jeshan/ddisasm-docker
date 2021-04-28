@@ -42,11 +42,6 @@ RUN cd libehp && \
 ###
 RUN git clone --depth 1 https://github.com/GrammaTech/ddisasm
 
-#WORKDIR /app/ddisasm
-RUN ls -alh
-
-RUN pip3 install lief
-
 RUN wget https://github.com/lief-project/LIEF/releases/download/0.11.4/LIEF-0.11.4-Linux-x86_64.tar.gz -O lief.tar.gz
 RUN tar zxvf lief.tar.gz
 
