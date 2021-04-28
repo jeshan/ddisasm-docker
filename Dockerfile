@@ -1,6 +1,6 @@
 # requires at least 13 GB of free RAM for the default ddisasm build
 
-FROM ubuntu:20.04 as builder
+FROM ubuntu:21.04 as builder
 
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y autoconf automake bison build-essential clang doxygen flex g++ git libncurses5-dev libtool libsqlite3-dev make mcpp python sqlite zlib1g-dev cmake g++ python3-pip libboost-dev libprotobuf-dev protobuf-compiler libboost-all-dev wget unzip pandoc
@@ -64,7 +64,7 @@ RUN ldconfig
 RUN ddisasm --version
 RUN gtirb-pprinter --version
 
-FROM ubuntu:20.04
+FROM ubuntu:21.04
 
 WORKDIR /usr/lib/x86_64-linux-gnu/
 COPY --from=builder /usr/local/bin/ddisasm /usr/local/bin/
