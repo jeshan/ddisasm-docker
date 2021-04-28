@@ -11,50 +11,35 @@ WORKDIR /app
 
 RUN git clone --depth 1 https://github.com/grammatech/gtirb
 
-WORKDIR gtirb
+RUN cd gtirb && \
+  cmake ./ -Bbuild && \
+  cd build && \
+  cmake --build . && \
+  make install
 
-RUN cmake ./ -Bbuild
+RUN git clone --depth 1 -b next https://github.com/GrammaTech/capstone
 
-WORKDIR build
-RUN cmake --build .
-RUN make install
+RUN cd capstone && \
+  MAKE_JOBS=${CMAKE_BUILD_PARALLEL_LEVEL} ./make.sh && \
+  ./make.sh install
 
-WORKDIR /app
-
-RUN git clone https://github.com/GrammaTech/capstone
-
-WORKDIR capstone
-
-RUN git checkout origin/next
-
-RUN MAKE_JOBS=${CMAKE_BUILD_PARALLEL_LEVEL} ./make.sh
-RUN ./make.sh install
-
-WORKDIR /app
 RUN git clone https://github.com/grammatech/gtirb-pprinter
 
-WORKDIR gtirb-pprinter
-
-RUN cmake ./
-RUN make -j${CMAKE_BUILD_PARALLEL_LEVEL}
-RUN make install
+RUN cd gtirb-pprinter && \
+  cmake ./ && \
+  make -j${CMAKE_BUILD_PARALLEL_LEVEL} && \
+  make install
 
 ###
-WORKDIR /app
 RUN git clone https://git.zephyr-software.com/opensrc/libehp
 
-WORKDIR libehp
-
-RUN cmake . -Bbuild
-
-WORKDIR build
-
-RUN cmake --build .
-
-RUN make install
+RUN cd libehp && \
+  cmake . -Bbuild && \
+  cd build && \
+  cmake --build . && \
+  make install
 
 ###
-WORKDIR /app
 RUN git clone --depth 1 https://github.com/GrammaTech/ddisasm
 
 #WORKDIR /app/ddisasm
@@ -67,14 +52,18 @@ RUN tar zxvf lief.tar.gz
 
 RUN git clone --depth 1 -b 2.0.2 https://github.com/souffle-lang/souffle
 
-WORKDIR souffle
-RUN ./bootstrap && ./configure && make -j${CMAKE_BUILD_PARALLEL_LEVEL} && make install
+RUN cd souffle && \
+  ./bootstrap && \
+  ./configure && \
+  make -j${CMAKE_BUILD_PARALLEL_LEVEL} && \
+  make install
 
-WORKDIR /app/ddisasm
-
-RUN cmake -Dgtirb_pprinter_DIR=/app/gtirb-pprinter/build -DLIEF_ROOT=/app/LIEF-0.11.4-Linux-x86_64 ./ -Bbuild
-WORKDIR build
-RUN make -j${CMAKE_BUILD_PARALLEL_LEVEL} && make install
+RUN cd ddisasm && \
+  mkdir build && \
+  cmake -Dgtirb_pprinter_DIR=/app/gtirb-pprinter/build -DLIEF_ROOT=/app/LIEF-0.11.4-Linux-x86_64 ./ -Bbuild && \
+  cd build && \
+  make -j${CMAKE_BUILD_PARALLEL_LEVEL} && \
+  make install
 
 RUN ldconfig
 RUN ddisasm --version
