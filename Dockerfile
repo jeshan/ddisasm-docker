@@ -30,21 +30,17 @@ RUN git checkout origin/next
 RUN MAKE_JOBS=${CMAKE_BUILD_PARALLEL_LEVEL} ./make.sh
 RUN ./make.sh install
 
+WORKDIR /app
 RUN git clone https://github.com/grammatech/gtirb-pprinter
 
 WORKDIR gtirb-pprinter
 
-RUN cmake ./ -Bbuild
-WORKDIR build
+RUN cmake ./
 RUN make -j${CMAKE_BUILD_PARALLEL_LEVEL}
 RUN make install
 
-RUN cmake ./ -Bbuild
-
-WORKDIR build
-RUN make -j${CMAKE_BUILD_PARALLEL_LEVEL}
-
 ###
+WORKDIR /app
 RUN git clone https://git.zephyr-software.com/opensrc/libehp
 
 WORKDIR libehp
@@ -58,28 +54,25 @@ RUN cmake --build .
 RUN make install
 
 ###
+WORKDIR /app
 RUN git clone --depth 1 https://github.com/GrammaTech/ddisasm
 
 #WORKDIR /app/ddisasm
 RUN ls -alh
-WORKDIR ddisasm
 
 RUN pip3 install lief
 
-WORKDIR /app
 RUN wget https://github.com/lief-project/LIEF/releases/download/0.11.4/LIEF-0.11.4-Linux-x86_64.tar.gz -O lief.tar.gz
 RUN tar zxvf lief.tar.gz
-
-WORKDIR /app/capstone/gtirb-pprinter/build/build/libehp/build/ddisasm
 
 RUN git clone --depth 1 -b 2.0.2 https://github.com/souffle-lang/souffle
 
 WORKDIR souffle
 RUN ./bootstrap && ./configure && make -j${CMAKE_BUILD_PARALLEL_LEVEL} && make install
 
-WORKDIR ..
+WORKDIR /app/ddisasm
 
-RUN cmake -Dgtirb_pprinter_DIR=/app/capstone/gtirb-pprinter/build -DLIEF_ROOT=/app/LIEF-0.11.4-Linux-x86_64 ./ -Bbuild
+RUN cmake -Dgtirb_pprinter_DIR=/app/gtirb-pprinter/build -DLIEF_ROOT=/app/LIEF-0.11.4-Linux-x86_64 ./ -Bbuild
 WORKDIR build
 RUN make -j${CMAKE_BUILD_PARALLEL_LEVEL} && make install
 
