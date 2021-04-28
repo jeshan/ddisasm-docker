@@ -57,18 +57,6 @@ RUN cmake --build .
 
 RUN make install
 
-RUN wget https://github.com/lief-project/LIEF/releases/download/0.11.0/lief-0.11.0.zip -O lief.zip
-
-RUN unzip lief.zip
-
-WORKDIR lief-0.11.0
-
-RUN cmake . -Bbuild
-
-WORKDIR build
-
-RUN cmake --build .
-
 ###
 RUN git clone --depth 1 https://github.com/GrammaTech/ddisasm
 
@@ -82,7 +70,7 @@ WORKDIR /app
 RUN wget https://github.com/lief-project/LIEF/releases/download/0.11.4/LIEF-0.11.4-Linux-x86_64.tar.gz -O lief.tar.gz
 RUN tar zxvf lief.tar.gz
 
-WORKDIR /app/capstone/gtirb-pprinter/build/build/libehp/build/lief-0.11.0/build/ddisasm
+WORKDIR /app/capstone/gtirb-pprinter/build/build/libehp/build/ddisasm
 
 RUN git clone --depth 1 -b 2.0.2 https://github.com/souffle-lang/souffle
 
