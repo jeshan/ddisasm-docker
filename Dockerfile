@@ -3,7 +3,9 @@
 FROM ubuntu:21.04 as builder
 
 RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y autoconf automake bison build-essential clang doxygen flex g++ git libncurses5-dev libtool libsqlite3-dev make mcpp python sqlite zlib1g-dev cmake g++ python3-pip libboost-dev libprotobuf-dev protobuf-compiler libboost-all-dev wget unzip pandoc
+  DEBIAN_FRONTEND=noninteractive apt-get install -y autoconf automake bison build-essential clang doxygen \
+  flex g++ git libncurses5-dev libtool libsqlite3-dev make mcpp python sqlite zlib1g-dev cmake g++ python3-pip \
+  libboost-dev libprotobuf-dev protobuf-compiler libboost-all-dev wget unzip pandoc openjdk-8-jdk
 
 ENV CMAKE_BUILD_PARALLEL_LEVEL 4
 
@@ -67,6 +69,7 @@ RUN gtirb-pprinter --version
 FROM ubuntu:21.04
 
 WORKDIR /usr/lib/x86_64-linux-gnu/
+COPY --from=builder /app/gtirb/build/java/gtirb_api-*.jar /libs/
 COPY --from=builder /usr/local/bin/ddisasm /usr/local/bin/
 COPY --from=builder /usr/lib/x86_64-linux-gnu/libgomp.* /usr/lib/x86_64-linux-gnu/libprotobuf.* \
   /usr/local/lib/libehp.so* \
