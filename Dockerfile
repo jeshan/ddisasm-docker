@@ -62,6 +62,7 @@ RUN cd ddisasm && \
 
 RUN ldconfig
 RUN ddisasm --version
+RUN gtirb-pprinter --version
 
 FROM ubuntu:20.04
 
