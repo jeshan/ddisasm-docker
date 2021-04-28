@@ -51,7 +51,7 @@ RUN git clone --depth 1 -b 2.0.2 https://github.com/souffle-lang/souffle
 
 RUN cd souffle && \
   ./bootstrap && \
-  ./configure && \
+  ./configure --enable-64bit-domain && \
   make -j${CMAKE_BUILD_PARALLEL_LEVEL} && \
   make install
 
